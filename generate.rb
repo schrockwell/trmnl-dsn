@@ -103,7 +103,7 @@ puts 'Copying images...'
 FileUtils.cp_r('images', '_site/images')
 
 puts 'Writing _site/index.html...'
-File.open('_site/dsn.html', 'w') do |file|
+File.open('_site/index.html', 'w') do |file|
   file.write(@template.render(@output))
 end
 
