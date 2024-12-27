@@ -1,5 +1,7 @@
 # Deep Space Network Private Plugin for TRMNL
 
+![Preview of TRMNL dashboard](preview.png)
+
 ## Step 1: Create a New Private Plugin
 
 Log in to your TRMNL dashboard.
