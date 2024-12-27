@@ -1,8 +1,117 @@
 # Deep Space Network Private Plugin for TRMNL
 
-## Hosting on Netlify
+## Step 1: Create a New Private Plugin
 
-The JSON data file is publicly hosted on Netlify at https://trmnl-dsn.netlify.app/dsn.json so you don't have to do these steps unless you really want to!
+Log in to your TRMNL dashboard.
+On the left-hand menu, click on the 'Go to Plugins' button.
+Find the 'Private Plugin' Plugin to create a Private Plugin.
+Click 'Add new' to create a new Private Plugin.
+
+## Step 2: Set up the Polling Strategy
+
+Name your plugin (e.g., "Deep Space Network") then scroll down to the Strategy section.
+Choose the Polling strategy from the Strategy dropdown menu.
+In the Polling URL field, enter this URL:
+
+```
+https://trmnl-dsn.netlify.app/dsn.json
+```
+
+Click Save. Once it is saved, the 'Edit Markup' button is now available.
+
+## Step 3: Add the HTML Markup
+
+Click the 'Edit Markup' button.
+
+Copy and paste the following code into the Markup box.
+
+```html
+<div class="layout layout--col gap--large">
+  <div class="columns">
+    {% for station in stations %}
+    <div
+      class="column"
+      data-list-limit="true"
+      data-list-max-height="420"
+      data-list-hidden-count="true"
+    >
+      <div class="flex layout--center gap">
+        <img
+          src="{{ base_url }}/images/{{ station.icon }}"
+          class="image-dither"
+        />
+        <span class="title">{{ station.name }}</span>
+      </div>
+
+      <div class="b-h-gray-3"></div>
+
+      {% for craft in station.crafts %}
+      <div class="item">
+        <div class="content">
+          <div class="flex gap">
+            <div class="flex flex--col gap--small">
+              <img
+                src="{{ base_url }}/images/{{ craft.icon }}"
+                alt="Dish"
+                width="30"
+                height="30"
+              />
+            </div>
+            <div>
+              <span class="title title--small">{{ craft.name }}</span>
+
+              {% for sig in craft.signals %} {% if sig.dir == "up" %}
+              <div class="flex gap">
+                <span class="label label--small label--underline">
+                  ↑ {{ sig.band }}-band
+                </span>
+                <span class="label label--small">{{ sig.power }}</span>
+              </div>
+              {% elsif sig.dir == "down" %}
+              <div class="flex gap">
+                <span class="label label--small label--underline">
+                  ↓ {{ sig.band }}-band
+                </span>
+                <span class="label label--small"> {{ sig.data_rate }} </span>
+                <span class="label label--small"> {{ sig.power }} </span>
+              </div>
+              {% endif %} {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+<div class="title_bar">
+  <img
+    class="image image-dither"
+    src="{{ base_url }}/images/nasa-28px.png"
+    alt="NASA"
+  />
+  <span class="title">NASA Deep Space Network</span>
+</div>
+```
+
+## Step 4: Save and Activate the Plugin
+
+Once you have entered the markup, click Save to store the plugin.
+
+Change the refresh rate to "Hourly".
+
+Navigate to the Playlists tab in your TRMNL dashboard.
+
+Drag and drop your new Deep Space Network plugin to the top of your playlist if not automatically added.
+
+## Step 5: View the Dashboard on Your Device
+
+Once refreshed, your TRMNL device will display the Deep Space Network status.
+
+# Self-Hosting on Netlify
+
+The JSON data file is publicly hosted on Netlify at https://trmnl-dsn.netlify.app/dsn.json (updating hourly), so you don't have to do these steps unless you really want to!
 
 Create a new Netlify site with the following settings:
 
