@@ -1,10 +1,14 @@
 #! /usr/bin/env ruby
 
+# Standard libs
 require 'fileutils'
-require 'open-uri'
-require 'ox'
 require 'json'
+require 'open-uri'
+require 'time'
+
+# Third-party
 require 'liquid'
+require 'ox'
 
 @base_url = ENV['BASE_URL'] || raise('BASE_URL not set')
 
@@ -91,6 +95,7 @@ end.sort_by { |craft| craft['craft'] }
 @output = { 
   'base_url' => @base_url,
   'stations' => @stations,
+  'updated_at' => Time.now.utc.iso8601
 }
 
 @template = Liquid::Template.parse(File.open('template.html').read)
