@@ -1,4 +1,10 @@
-# Deep Space Network Private Plugin for TRMNL
+# NASA Deep Space Network Private Plugin for TRMNL
+
+This [TRMNL](https://usetrmnl.com/) plugin displays the current status of the [Deep Space Network](https://www.nasa.gov/directorates/somd/space-communications-navigation-program/what-is-the-deep-space-network/): its three ground-based stations in Spain, the United States, and Australia, and the spaceborne satellites with which they communicate.
+
+Data is provided by NASA's [DSN Now](https://eyes.nasa.gov/apps/dsn-now/dsn.html).
+
+This is a private plugin, so it's not available in the plugin store. Follow the directions below to add it to your device.
 
 ![Preview of TRMNL dashboard](preview.png)
 
