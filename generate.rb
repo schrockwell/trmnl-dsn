@@ -118,13 +118,3 @@ File.open('_site/dsn.json', 'w') do |file|
 end
 
 puts 'Done!'
-
-
-# @json_body = {
-#   merge_variables: @output
-# }.to_json
-
-# # post it to https://usetrmnl.com/api/custom_plugins/4e4ac460-a136-45aa-959f-82a89800fc1d
-
-# @response = system('curl', '-s', '-o', '/dev/null', '-X', 'POST', '-H', 'Content-Type: application/json', '-d', @json_body, 'https://usetrmnl.com/api/custom_plugins/4e4ac460-a136-45aa-959f-82a89800fc1d')
-# p @response
