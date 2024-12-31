@@ -1,5 +1,7 @@
 # NASA Deep Space Network Private Plugin for TRMNL
 
+[See a live preview!](https://trmnl-dsn.netlify.app/)
+
 This [TRMNL](https://usetrmnl.com/) plugin displays the current status of the [Deep Space Network](https://www.nasa.gov/directorates/somd/space-communications-navigation-program/what-is-the-deep-space-network/): its three ground-based stations in Spain, the United States, and Australia, and the spaceborne satellites with which they communicate.
 
 Data is provided by NASA's [DSN Now](https://eyes.nasa.gov/apps/dsn-now/dsn.html).
@@ -40,7 +42,7 @@ Copy and paste the following code into the Markup box.
     <div
       class="column"
       data-list-limit="true"
-      data-list-max-height="420"
+      data-list-max-height="320"
       data-list-hidden-count="true"
     >
       <div class="flex layout--center gap">
@@ -83,11 +85,13 @@ Copy and paste the following code into the Markup box.
                 <span class="label label--small"> {{ sig.data_rate }} </span>
                 <span class="label label--small"> {{ sig.power }} </span>
               </div>
-              {% endif %} {% endfor %}
+              {% endif %}{% endfor %}
             </div>
           </div>
         </div>
       </div>
+      {% else %}
+      <span class="label label--gray-out"> No active communications </span>
       {% endfor %}
     </div>
     {% endfor %}

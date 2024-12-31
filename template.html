@@ -61,11 +61,15 @@
                           {{ sig.power }}
                         </span>
                       </div>
-                      {% endif %} {% endfor %}
+                      {% endif %}{% endfor %}
                     </div>
                   </div>
                 </div>
               </div>
+              {% else %}
+              <span class="label label--gray-out">
+                No active communications
+              </span>
               {% endfor %}
             </div>
             {% endfor %}
