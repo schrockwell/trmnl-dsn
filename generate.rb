@@ -82,14 +82,18 @@ end.compact
   {
     'name' => craft,
     'icon' => "dsn-#{sig_count}.png",
-    'signals' => signals
+    'signals' => signals.sort_by { |sig| sig['dir'] == 'up' ? 0 : 1 }
   }
-end.sort_by { |craft| craft['craft'] }
+end
+
+def select_station(crafts, station)
+  crafts.select { |craft| craft['signals'].any? { |sig| sig['station'] == station } }.sort_by { |craft| craft['name'] }
+end
 
 @stations = [
-  { 'name' => 'Madrid', 'icon' => 'flag-mdscc-bw.png', 'crafts' => @crafts.select { |craft| craft['signals'].any? { |sig| sig['station'] == 'mdscc' } }.sort_by { |craft| craft['name'] } },
-  { 'name' => 'Goldstone', 'icon' => 'flag-gdscc-bw.png', 'crafts' => @crafts.select { |craft| craft['signals'].any? { |sig| sig['station'] == 'gdscc' } }.sort_by { |craft| craft['name'] }  },
-  { 'name' => 'Canberra', 'icon' => 'flag-cdscc-bw.png', 'crafts' => @crafts.select { |craft| craft['signals'].any? { |sig| sig['station'] == 'cdscc' } }.sort_by { |craft| craft['name'] }  }
+  { 'name' => 'Madrid', 'icon' => 'flag-mdscc-bw.png', 'crafts' => select_station(@crafts, 'mdscc') },
+  { 'name' => 'Goldstone', 'icon' => 'flag-gdscc-bw.png', 'crafts' => select_station(@crafts, 'gdscc') },
+  { 'name' => 'Canberra', 'icon' => 'flag-cdscc-bw.png', 'crafts' => select_station(@crafts, 'cdscc') }
 ]
 
 @output = { 
