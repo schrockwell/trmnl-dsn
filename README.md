@@ -1,14 +1,22 @@
 # NASA Deep Space Network Private Plugin for TRMNL
 
-[See a live preview!](https://trmnl-dsn.netlify.app/)
+**[See a live preview!](https://trmnl-dsn.netlify.app/)**
 
 This [TRMNL](https://usetrmnl.com/) plugin displays the current status of the [Deep Space Network](https://www.nasa.gov/directorates/somd/space-communications-navigation-program/what-is-the-deep-space-network/): its three ground-based stations in Spain, the United States, and Australia, and the spaceborne satellites with which they communicate.
 
 Data is provided by NASA's [DSN Now](https://eyes.nasa.gov/apps/dsn-now/dsn.html).
 
-This is a private plugin, so it's not available in the plugin store. Follow the directions below to add it to your device.
-
 ![Preview of TRMNL dashboard](preview.png)
+
+# Easy Installation: Use the Screenshot Plugin
+
+Add a new [Screenshot](https://help.usetrmnl.com/en/articles/10302121-screenshot) plugin to your TRMNL playlist, and point it at the URL `https://trmnl-dsn.netlify.app/`
+
+The page is updated hourly, so the "Hourly" refresh rate is recommended.
+
+# Hard Installation: Create a Custom Plugin
+
+This is a private plugin, so it's not available in the plugin store. Follow the directions below to add it to your device.
 
 ## Step 1: Create a New Private Plugin
 
@@ -123,7 +131,7 @@ Once refreshed, your TRMNL device will display the Deep Space Network status.
 
 # Self-Hosting on Netlify
 
-The JSON data file is publicly hosted on Netlify at https://trmnl-dsn.netlify.app/dsn.json (updating hourly), so you don't have to do these steps unless you really want to!
+The rendered page and JSON data files are publicly hosted on Netlify at https://trmnl-dsn.netlify.app/dsn.json (updating hourly), so you don't have to do these steps unless you really want to!
 
 Create a new Netlify site with the following settings:
 
