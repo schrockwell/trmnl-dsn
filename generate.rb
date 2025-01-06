@@ -7,8 +7,8 @@ require 'open-uri'
 require 'time'
 
 # Third-party
-require 'liquid'
 require 'ox'
+require 'trmnl_preview'
 
 @base_url = ENV['BASE_URL'] || raise('BASE_URL not set')
 
@@ -102,8 +102,6 @@ end
   'updated_at' => Time.now.utc.iso8601
 }
 
-@template = Liquid::Template.parse(File.open('template.html').read)
-
 puts 'Recreating _site directory...'
 FileUtils.rm_rf('_site')
 Dir.mkdir('_site')
@@ -111,14 +109,13 @@ Dir.mkdir('_site')
 puts 'Copying images...'
 FileUtils.cp_r('images', '_site/images')
 
-puts 'Writing _site/index.html...'
-File.open('_site/index.html', 'w') do |file|
-  file.write(@template.render(@output))
-end
-
 puts 'Writing _site/dsn.json...'
 File.open('_site/dsn.json', 'w') do |file|
   file.write(@output.to_json)
 end
+
+puts 'Writing _site/index.html...'
+context = TRMNLPreview::Context.new('.')
+File.write('_site/index.html', context.render_full_page('full'))
 
 puts 'Done!'

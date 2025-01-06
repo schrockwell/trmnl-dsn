@@ -1,0 +1,2 @@
+strategy = "polling"
+url = "./_site/dsn.json"
