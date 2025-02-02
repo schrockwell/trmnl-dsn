@@ -45,7 +45,7 @@ station_id = nil
     el.each do |dish_el|
       case dish_el.name
       when 'upSignal'
-        next unless dish_el[:active] == 'true'
+        next unless dish_el[:active] == 'true' && dish_el[:power] != '0'
         craft = @spacecraft[dish_el[:spacecraft].upcase] || dish_el[:spacecraft]
 
         @all_signals << {
