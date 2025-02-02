@@ -115,7 +115,9 @@ File.open('_site/dsn.json', 'w') do |file|
 end
 
 puts 'Writing _site/index.html...'
+
 context = TRMNLPreview::Context.new('.')
+context.poll_data # copy from _site/dsn.json to tmp/data.json
 File.write('_site/index.html', context.render_full_page('full'))
 
 puts 'Done!'
