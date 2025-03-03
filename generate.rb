@@ -82,7 +82,7 @@ end.compact
   {
     'name' => craft,
     'icon' => "dsn-#{sig_count}.png",
-    'signals' => signals.sort_by { |sig| sig['dir'] == 'up' ? 0 : 1 }
+    'signals' => signals.sort_by { |sig| sig['dir'] == 'up' ? 0 : 1 }.uniq
   }
 end
 
