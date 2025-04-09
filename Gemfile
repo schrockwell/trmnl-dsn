@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '3.2.2'
+ruby '3.4.2'
 
 gem 'ox'
-gem 'trmnl_preview', '~> 0.3.2'
+gem 'trmnl_preview', '~> 0.4'

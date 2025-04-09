@@ -102,22 +102,18 @@ end
   'updated_at' => Time.now.utc.iso8601
 }
 
-puts 'Recreating _site directory...'
-FileUtils.rm_rf('_site')
-Dir.mkdir('_site')
+puts 'Recreating _build directory...'
+FileUtils.rm_rf('_build')
+Dir.mkdir('_build')
 
 puts 'Copying images...'
-FileUtils.cp_r('images', '_site/images')
+FileUtils.cp_r('images', '_build/images')
 
-puts 'Writing _site/dsn.json...'
-File.open('_site/dsn.json', 'w') do |file|
+puts 'Writing _build/dsn.json...'
+File.open('_build/dsn.json', 'w') do |file|
   file.write(@output.to_json)
 end
 
-puts 'Writing _site/index.html...'
-
-context = TRMNLPreview::Context.new('.')
-context.poll_data # copy from _site/dsn.json to tmp/data.json
-File.write('_site/index.html', context.render_full_page('full'))
+puts 'Writing _build/index.html...'
 
 puts 'Done!'
