@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'sinatra'
+require 'json'
+require_relative '../lib/dsn'
+
+set :port, (ENV['PORT'] || 9292).to_i
+set :public_folder, File.expand_path('../public', __dir__)
+
+get '/api/dsn' do
+  content_type :json
+  base_url = ENV['BASE_URL'] || request.base_url
+  DSN.fetch(base_url: base_url).to_json
+end
+
+get '/' do
+  'NASA Deep Space Network API. GET /api/dsn for data.'
+end

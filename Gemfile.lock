@@ -126,6 +126,7 @@ PLATFORMS
 
 DEPENDENCIES
   ox
+  sinatra
   trmnl_preview (~> 0.4)
 
 RUBY VERSION
