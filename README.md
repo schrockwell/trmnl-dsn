@@ -6,9 +6,21 @@ Data is provided by NASA's [DSN Now](https://eyes.nasa.gov/apps/dsn-now/dsn.html
 
 ![Preview of TRMNL dashboard](preview.png)
 
-## Self-Hosting on Netlify
+See the live data at https://trmnl-dsn.schrockwell.com/api/dsn
 
-The JSON data files are publicly hosted on Netlify at https://trmnl-dsn.netlify.app/dsn.json (updating hourly), so you don't have to do these steps unless you really want to!
+## Running Web Server
+
+```
+bin/server
+```
+
+## Deploying to Kamal
+
+```
+kamal deploy
+```
+
+## Self-Hosting on Netlify
 
 Create a new Netlify site with the following settings:
 

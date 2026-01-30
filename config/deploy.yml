@@ -1,0 +1,20 @@
+service: trmnl-dsn
+
+image: schrockwell/trmnl-dsn
+
+servers:
+  web:
+    - trmnl-dsn.schrockwell.com
+
+proxy:
+  ssl: true
+  host: trmnl-dsn.schrockwell.com
+  app_port: 3000
+
+registry:
+  server: localhost:5555
+
+# Build remotely, on the correct architecture
+builder:
+  arch: amd64
+  remote: ssh://root@kamal.schrockwell.com
