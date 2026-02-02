@@ -1,32 +1,29 @@
-# Stage 1: Build
-FROM ruby:3.4.2-slim AS build
+# Build stage
+FROM ruby:3.4.2-alpine AS builder
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+ENV BUNDLE_PATH=/app/vendor/bundle
+ENV BUNDLE_WITHOUT=development:test
+
+RUN apk add --no-cache build-base git
 
 COPY Gemfile Gemfile.lock ./
-RUN bundle config set --local deployment true && \
-    bundle config set --local without 'development test' && \
-    bundle install
+RUN bundle install
 
-COPY . .
-
-# Stage 2: Runtime
-FROM ruby:3.4.2-slim
+# Runtime stage
+FROM ruby:3.4.2-alpine
 
 WORKDIR /app
 
-COPY --from=build /app /app
-COPY --from=build /usr/local/bundle /usr/local/bundle
-
-EXPOSE 3000
-
+ENV BUNDLE_PATH=/app/vendor/bundle
 ENV RACK_ENV=production
 ENV HOST=0.0.0.0
 ENV PORT=3000
 
-CMD ["./bin/server"]
+COPY . .
+COPY --from=builder /app/vendor/bundle /app/vendor/bundle
+
+EXPOSE 3000
+
+CMD ["bundle", "exec", "./bin/server"]
