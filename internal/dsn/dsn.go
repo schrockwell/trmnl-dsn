@@ -1,13 +1,10 @@
-package main
+package dsn
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
-	"os"
 	"sort"
 	"strings"
 	"time"
@@ -20,15 +17,15 @@ const (
 
 // XML structures for config.xml
 
-type Config struct {
-	SpacecraftMap SpacecraftMap `xml:"spacecraftMap"`
+type xmlConfig struct {
+	SpacecraftMap xmlSpacecraftMap `xml:"spacecraftMap"`
 }
 
-type SpacecraftMap struct {
-	Spacecraft []Spacecraft `xml:"spacecraft"`
+type xmlSpacecraftMap struct {
+	Spacecraft []xmlSpacecraft `xml:"spacecraft"`
 }
 
-type Spacecraft struct {
+type xmlSpacecraft struct {
 	Name         string `xml:"name,attr"`
 	FriendlyName string `xml:"friendlyName,attr"`
 }
@@ -72,16 +69,16 @@ type Craft struct {
 	Signals []Signal `json:"signals"`
 }
 
-type StationOutput struct {
+type Station struct {
 	Name   string  `json:"name"`
 	Icon   string  `json:"icon"`
 	Crafts []Craft `json:"crafts"`
 }
 
 type Response struct {
-	BaseURL   string          `json:"base_url"`
-	Stations  []StationOutput `json:"stations"`
-	UpdatedAt string          `json:"updated_at"`
+	BaseURL   string    `json:"base_url"`
+	Stations  []Station `json:"stations"`
+	UpdatedAt string    `json:"updated_at"`
 }
 
 func fetchURL(url string) ([]byte, error) {
@@ -107,7 +104,20 @@ func dataRateText(raw string) string {
 	}
 }
 
-func fetchDSN(baseURL string) (*Response, error) {
+func dedup(signals []Signal) []Signal {
+	seen := make(map[string]bool)
+	var result []Signal
+	for _, s := range signals {
+		key := s.Dir + "|" + s.Station + "|" + s.Band + "|" + s.Power + "|" + s.DataRate + "|" + s.Craft
+		if !seen[key] {
+			seen[key] = true
+			result = append(result, s)
+		}
+	}
+	return result
+}
+
+func Fetch(baseURL string) (*Response, error) {
 	configData, err := fetchURL(configURL)
 	if err != nil {
 		return nil, fmt.Errorf("fetching config: %w", err)
@@ -118,7 +128,7 @@ func fetchDSN(baseURL string) (*Response, error) {
 		return nil, fmt.Errorf("fetching dsn: %w", err)
 	}
 
-	var config Config
+	var config xmlConfig
 	if err := xml.Unmarshal(configData, &config); err != nil {
 		return nil, fmt.Errorf("parsing config: %w", err)
 	}
@@ -258,76 +268,11 @@ func fetchDSN(baseURL string) (*Response, error) {
 
 	return &Response{
 		BaseURL: baseURL,
-		Stations: []StationOutput{
+		Stations: []Station{
 			{Name: "Madrid", Icon: "flag-mdscc-bw.png", Crafts: selectStation("mdscc")},
 			{Name: "Goldstone", Icon: "flag-gdscc-bw.png", Crafts: selectStation("gdscc")},
 			{Name: "Canberra", Icon: "flag-cdscc-bw.png", Crafts: selectStation("cdscc")},
 		},
 		UpdatedAt: time.Now().UTC().Format(time.RFC3339),
 	}, nil
-}
-
-func dedup(signals []Signal) []Signal {
-	seen := make(map[string]bool)
-	var result []Signal
-	for _, s := range signals {
-		key := s.Dir + "|" + s.Station + "|" + s.Band + "|" + s.Power + "|" + s.DataRate + "|" + s.Craft
-		if !seen[key] {
-			seen[key] = true
-			result = append(result, s)
-		}
-	}
-	return result
-}
-
-func main() {
-	host := os.Getenv("HOST")
-	if host == "" {
-		host = "0.0.0.0"
-	}
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "3000"
-	}
-	baseURL := os.Getenv("BASE_URL")
-	if baseURL == "" {
-		baseURL = "http://localhost:" + port
-	}
-
-	mux := http.NewServeMux()
-
-	mux.HandleFunc("GET /api/dsn", func(w http.ResponseWriter, r *http.Request) {
-		burl := baseURL
-		if burl == "" {
-			scheme := "http"
-			if r.TLS != nil {
-				scheme = "https"
-			}
-			burl = scheme + "://" + r.Host
-		}
-
-		data, err := fetchDSN(burl)
-		if err != nil {
-			log.Printf("error fetching DSN data: %v", err)
-			http.Error(w, "error fetching DSN data", http.StatusBadGateway)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(data)
-	})
-
-	mux.Handle("GET /images/", http.StripPrefix("/images/", http.FileServer(http.Dir("public/images"))))
-
-	mux.HandleFunc("GET /up", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "ok")
-	})
-
-	mux.HandleFunc("GET /", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "NASA Deep Space Network API. GET /api/dsn for data.")
-	})
-
-	addr := host + ":" + port
-	log.Printf("listening on %s", addr)
-	log.Fatal(http.ListenAndServe(addr, mux))
 }

@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-exec go run . "$@"
+exec go run ./cmd/server "$@"
