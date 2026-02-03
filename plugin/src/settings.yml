@@ -1,0 +1,12 @@
+---
+strategy: polling
+no_screen_padding: 'no'
+dark_mode: 'no'
+static_data: ''
+polling_verb: get
+polling_url: https://trmnl-dsn.schrockwell.com/api/dsn
+polling_headers: ''
+polling_body: ''
+id: 9540
+name: NASA Deep Space Network
+refresh_interval: 60
