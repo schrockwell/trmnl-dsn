@@ -2,7 +2,7 @@ service: trmnl-dsn
 
 image: schrockwell/trmnl-dsn
 
-retain_containers: 0
+retain_containers: 1
 
 servers:
   web:
