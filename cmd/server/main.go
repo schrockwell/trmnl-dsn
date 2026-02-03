@@ -21,11 +21,6 @@ func main() {
 	if port == "" {
 		port = "3000"
 	}
-	baseURL := os.Getenv("BASE_URL")
-	if baseURL == "" {
-		baseURL = "http://localhost:" + port
-	}
-
 	mux := http.NewServeMux()
 
 	var (
@@ -45,7 +40,7 @@ func main() {
 		}
 		cacheMu.Unlock()
 
-		data, err := dsn.Fetch(baseURL)
+		data, err := dsn.Fetch()
 		if err != nil {
 			log.Printf("error fetching DSN data: %v", err)
 			http.Error(w, "error fetching DSN data", http.StatusBadGateway)

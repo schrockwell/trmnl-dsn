@@ -76,7 +76,6 @@ type Station struct {
 }
 
 type Response struct {
-	BaseURL   string    `json:"base_url"`
 	Stations  []Station `json:"stations"`
 	UpdatedAt string    `json:"updated_at"`
 }
@@ -117,7 +116,7 @@ func dedup(signals []Signal) []Signal {
 	return result
 }
 
-func Fetch(baseURL string) (*Response, error) {
+func Fetch() (*Response, error) {
 	configData, err := fetchURL(configURL)
 	if err != nil {
 		return nil, fmt.Errorf("fetching config: %w", err)
@@ -267,7 +266,6 @@ func Fetch(baseURL string) (*Response, error) {
 	}
 
 	return &Response{
-		BaseURL: baseURL,
 		Stations: []Station{
 			{Name: "Madrid", Icon: "flag-mdscc-bw.png", Crafts: selectStation("mdscc")},
 			{Name: "Goldstone", Icon: "flag-gdscc-bw.png", Crafts: selectStation("gdscc")},
