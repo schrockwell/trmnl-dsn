@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sync"
+	"time"
 
 	"trmnl-dsn/internal/dsn"
 )
@@ -26,7 +28,23 @@ func main() {
 
 	mux := http.NewServeMux()
 
+	var (
+		cacheMu   sync.Mutex
+		cachedJSON []byte
+		cachedAt  time.Time
+	)
+
 	mux.HandleFunc("GET /api/dsn", func(w http.ResponseWriter, r *http.Request) {
+		cacheMu.Lock()
+		if cachedJSON != nil && time.Since(cachedAt) < time.Hour {
+			body := cachedJSON
+			cacheMu.Unlock()
+			w.Header().Set("Content-Type", "application/json")
+			w.Write(body)
+			return
+		}
+		cacheMu.Unlock()
+
 		data, err := dsn.Fetch(baseURL)
 		if err != nil {
 			log.Printf("error fetching DSN data: %v", err)
@@ -34,8 +52,20 @@ func main() {
 			return
 		}
 
+		body, err := json.Marshal(data)
+		if err != nil {
+			log.Printf("error encoding DSN data: %v", err)
+			http.Error(w, "error encoding DSN data", http.StatusInternalServerError)
+			return
+		}
+
+		cacheMu.Lock()
+		cachedJSON = body
+		cachedAt = time.Now()
+		cacheMu.Unlock()
+
 		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(data)
+		w.Write(body)
 	})
 
 	mux.Handle("GET /images/", http.StripPrefix("/images/", http.FileServer(http.Dir("public/images"))))
